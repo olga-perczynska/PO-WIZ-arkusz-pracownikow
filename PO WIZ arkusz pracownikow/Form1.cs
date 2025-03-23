@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.ComponentModel;
+using System.Data;
 
 namespace PO_WIZ_arkusz_pracownikow
 {
@@ -13,7 +14,7 @@ namespace PO_WIZ_arkusz_pracownikow
         public void OdswiezGridView()
         {
             dataGridView1.DataSource = null;
-            dataGridView1.DataSource = StaticData.ListaOsob;
+            dataGridView1.DataSource = new BindingList<Global>(StaticData.ListaOsob); // Dynamiczna lista
             dataGridView1.Refresh();
         }
 
@@ -43,52 +44,69 @@ namespace PO_WIZ_arkusz_pracownikow
             File.WriteAllText(filePath, csvContent);
         }
 
-        private void LoadCSVToDataGridView(string filePath)
+
+      public void LoadCSVToDataGridView(string filePath)
         {
-            
             if (!File.Exists(filePath))
             {
                 MessageBox.Show("Plik CSV nie istnieje.", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-          
             string[] lines = File.ReadAllLines(filePath);
 
-           
             if (lines.Length == 0)
             {
                 MessageBox.Show("Plik CSV jest pusty.", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            
-            DataTable dataTable = new DataTable();
+            string[] headers = lines[0].Split(',');
 
-
-          
-            string[] headers = lines[0].Split(','); 
-
-            foreach (string header in headers)
+            if (headers.Length < 5) 
             {
-                dataTable.Columns.Add(header.Trim()); 
+                MessageBox.Show("Plik CSV ma nieprawidłową strukturę!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
-            
-            for (int i = 1; i < lines.Length; i++)
+            if (StaticData.ListaOsob == null)
+            {
+                StaticData.ListaOsob = new List<Global>();
+            }
+
+            HashSet<int> existingIds = new HashSet<int>(StaticData.ListaOsob.Select(o => o.Id));
+
+            int addedCount = 0;
+            for (int i = 1; i < lines.Length; i++) 
             {
                 string[] values = lines[i].Split(',');
 
-               
-                if (values.Length == headers.Length)
+                if (values.Length == 5) 
                 {
-                    dataTable.Rows.Add(values);
+                    if (int.TryParse(values[0].Trim(), out int id) && !existingIds.Contains(id)) 
+                    {
+                        Global nowaOsoba = new Global
+                        {
+                            Id = id,
+                            Imie = values[1].Trim(),
+                            Nazwisko = values[2].Trim(),
+                            Etat = values[3].Trim(),
+                            Wiek = int.TryParse(values[4].Trim(), out int wiek) ? wiek : 0 
+                        };
+
+                        StaticData.ListaOsob.Add(nowaOsoba);
+                        existingIds.Add(id); 
+                        addedCount++;
+                    }
                 }
             }
 
-            
-            dataGridView1.DataSource = dataTable;
+            OdswiezGridView();
+
         }
+
+
+
 
         private void button2_Click(object sender, EventArgs e)
         {
