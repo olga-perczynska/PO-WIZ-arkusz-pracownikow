@@ -28,29 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            dataGridView1 = new DataGridView();
             button1 = new Button();
-            Imie = new DataGridViewTextBoxColumn();
-            Nazwisko = new DataGridViewTextBoxColumn();
-            Etat = new DataGridViewTextBoxColumn();
+            dataGridView1 = new DataGridView();
+            button2 = new Button();
+            button3 = new Button();
+            button4 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
-            // dataGridView1
-            // 
-            dataGridView1.BackgroundColor = SystemColors.ButtonHighlight;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Imie, Nazwisko, Etat });
-            dataGridView1.Location = new Point(54, 36);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowHeadersWidth = 102;
-            dataGridView1.Size = new Size(556, 375);
-            dataGridView1.TabIndex = 0;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
-            // 
             // button1
             // 
-            button1.Location = new Point(675, 300);
+            button1.Location = new Point(1159, 574);
             button1.Name = "button1";
             button1.Size = new Size(188, 58);
             button1.TabIndex = 1;
@@ -58,34 +46,60 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // Imie
+            // dataGridView1
             // 
-            Imie.HeaderText = "Imie";
-            Imie.MinimumWidth = 12;
-            Imie.Name = "Imie";
-            Imie.Width = 150;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(-9, 30);
+            dataGridView1.MultiSelect = false;
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersWidth = 102;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.Size = new Size(1054, 586);
+            dataGridView1.TabIndex = 2;
+            dataGridView1.CellClick += dataGridView1_CellClick;
+            dataGridView1.RowEnter += dataGridView1_RowEnter;
+            dataGridView1.RowHeaderMouseClick += dataGridView1_RowHeaderMouseClick;
             // 
-            // Nazwisko
+            // button2
             // 
-            Nazwisko.HeaderText = "Nazwisko";
-            Nazwisko.MinimumWidth = 12;
-            Nazwisko.Name = "Nazwisko";
-            Nazwisko.Width = 150;
+            button2.Location = new Point(221, 718);
+            button2.Name = "button2";
+            button2.Size = new Size(293, 58);
+            button2.TabIndex = 3;
+            button2.Text = "Zapis do .csv";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
-            // Etat
+            // button3
             // 
-            Etat.HeaderText = "Etat";
-            Etat.MinimumWidth = 12;
-            Etat.Name = "Etat";
-            Etat.Width = 150;
+            button3.Location = new Point(642, 718);
+            button3.Name = "button3";
+            button3.Size = new Size(293, 58);
+            button3.TabIndex = 4;
+            button3.Text = "Odczyt z .csv";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
+            // button4
+            // 
+            button4.Location = new Point(1159, 462);
+            button4.Name = "button4";
+            button4.Size = new Size(188, 58);
+            button4.TabIndex = 5;
+            button4.Text = "Usuń";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(17F, 41F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(875, 450);
-            Controls.Add(button1);
+            ClientSize = new Size(1389, 871);
+            Controls.Add(button4);
+            Controls.Add(button3);
+            Controls.Add(button2);
             Controls.Add(dataGridView1);
+            Controls.Add(button1);
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
@@ -93,11 +107,10 @@
         }
 
         #endregion
-
-        private DataGridView dataGridView1;
         private Button button1;
-        private DataGridViewTextBoxColumn Imie;
-        private DataGridViewTextBoxColumn Nazwisko;
-        private DataGridViewTextBoxColumn Etat;
+        private DataGridView dataGridView1;
+        private Button button2;
+        private Button button3;
+        private Button button4;
     }
 }
