@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Data;
+using System.Text.Json;
+using System.IO;
 
 namespace PO_WIZ_arkusz_pracownikow
 {
@@ -27,25 +29,25 @@ namespace PO_WIZ_arkusz_pracownikow
 
         private void ExportToCSV(DataGridView dataGridView, string filePath)
         {
-            
+
             string csvContent = "Id,Imie,Nazwisko,Etat,Wiek" + Environment.NewLine;
-          
+
             foreach (DataGridViewRow row in dataGridView.Rows)
             {
-              
+
                 if (!row.IsNewRow)
                 {
-                    
+
                     csvContent += string.Join(",", Array.ConvertAll(row.Cells.Cast<DataGridViewCell>()
                     .ToArray(), c => c.Value)) + Environment.NewLine;
                 }
             }
-           
+
             File.WriteAllText(filePath, csvContent);
         }
 
 
-      public void LoadCSVToDataGridView(string filePath)
+        public void LoadCSVToDataGridView(string filePath)
         {
             if (!File.Exists(filePath))
             {
@@ -63,7 +65,7 @@ namespace PO_WIZ_arkusz_pracownikow
 
             string[] headers = lines[0].Split(',');
 
-            if (headers.Length < 5) 
+            if (headers.Length < 5)
             {
                 MessageBox.Show("Plik CSV ma nieprawidłową strukturę!", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -77,13 +79,13 @@ namespace PO_WIZ_arkusz_pracownikow
             HashSet<int> existingIds = new HashSet<int>(StaticData.ListaOsob.Select(o => o.Id));
 
             int addedCount = 0;
-            for (int i = 1; i < lines.Length; i++) 
+            for (int i = 1; i < lines.Length; i++)
             {
                 string[] values = lines[i].Split(',');
 
-                if (values.Length == 5) 
+                if (values.Length == 5)
                 {
-                    if (int.TryParse(values[0].Trim(), out int id) && !existingIds.Contains(id)) 
+                    if (int.TryParse(values[0].Trim(), out int id) && !existingIds.Contains(id))
                     {
                         Global nowaOsoba = new Global
                         {
@@ -91,11 +93,11 @@ namespace PO_WIZ_arkusz_pracownikow
                             Imie = values[1].Trim(),
                             Nazwisko = values[2].Trim(),
                             Etat = values[3].Trim(),
-                            Wiek = int.TryParse(values[4].Trim(), out int wiek) ? wiek : 0 
+                            Wiek = int.TryParse(values[4].Trim(), out int wiek) ? wiek : 0
                         };
 
                         StaticData.ListaOsob.Add(nowaOsoba);
-                        existingIds.Add(id); 
+                        existingIds.Add(id);
                         addedCount++;
                     }
                 }
@@ -145,8 +147,8 @@ namespace PO_WIZ_arkusz_pracownikow
 
                 if (rowIndex >= 0 && rowIndex < StaticData.ListaOsob.Count)
                 {
-                    StaticData.ListaOsob.RemoveAt(rowIndex); 
-                    OdswiezGridView(); 
+                    StaticData.ListaOsob.RemoveAt(rowIndex);
+                    OdswiezGridView();
                 }
             }
             else
@@ -175,13 +177,73 @@ namespace PO_WIZ_arkusz_pracownikow
 
         private void dataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-  
+
             if (e.RowIndex >= 0)
             {
-          
-                dataGridView1.ClearSelection(); 
-                dataGridView1.Rows[e.RowIndex].Selected = true; 
+
+                dataGridView1.ClearSelection();
+                dataGridView1.Rows[e.RowIndex].Selected = true;
             }
+        }
+
+        private void ExportToJSON()
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "Pliki JSON (*.json)|*.json";
+                saveFileDialog.Title = "Zapisz plik JSON";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        string jsonString = JsonSerializer.Serialize(StaticData.ListaOsob, new JsonSerializerOptions { WriteIndented = true });
+                        File.WriteAllText(saveFileDialog.FileName, jsonString);
+
+                        MessageBox.Show("Dane zapisano do pliku JSON", "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Błąd zapisu do JSON: {ex.Message}", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+
+        private void LoadJSONToDataGridView()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Pliki JSON (*.json)|*.json";
+                openFileDialog.Title = "Wybierz plik JSON";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        string jsonString = File.ReadAllText(openFileDialog.FileName);
+                        StaticData.ListaOsob = JsonSerializer.Deserialize<List<Global>>(jsonString);
+
+                        OdswiezGridView();
+                        MessageBox.Show("Dane wczytano z wybranego pliku JSON!", "Sukces", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Błąd odczytu JSON: {ex.Message}", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            ExportToJSON();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            LoadJSONToDataGridView();
         }
     }
 }

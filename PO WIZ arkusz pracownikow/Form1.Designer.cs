@@ -33,6 +33,8 @@
             button2 = new Button();
             button3 = new Button();
             button4 = new Button();
+            button5 = new Button();
+            button6 = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -62,7 +64,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(399, 718);
+            button2.Location = new Point(45, 709);
             button2.Name = "button2";
             button2.Size = new Size(293, 58);
             button2.TabIndex = 3;
@@ -72,7 +74,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(965, 718);
+            button3.Location = new Point(459, 709);
             button3.Name = "button3";
             button3.Size = new Size(293, 58);
             button3.TabIndex = 4;
@@ -90,11 +92,33 @@
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
+            // button5
+            // 
+            button5.Location = new Point(1319, 709);
+            button5.Name = "button5";
+            button5.Size = new Size(293, 58);
+            button5.TabIndex = 7;
+            button5.Text = "Odczyt z .json";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
+            // button6
+            // 
+            button6.Location = new Point(888, 709);
+            button6.Name = "button6";
+            button6.Size = new Size(293, 58);
+            button6.TabIndex = 6;
+            button6.Text = "Zapis do .json";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(17F, 41F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1955, 871);
+            Controls.Add(button5);
+            Controls.Add(button6);
             Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button2);
@@ -112,5 +136,7 @@
         private Button button2;
         private Button button3;
         private Button button4;
+        private Button button5;
+        private Button button6;
     }
 }
